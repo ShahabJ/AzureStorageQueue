@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AzureQueueSample
@@ -119,6 +120,14 @@ namespace AzureQueueSample
 
             //Process the message in less than 30 seconds, and then delete the message
             await queue.DeleteMessageAsync(retrievedMessage);
+        }
+
+        public async Task PushMessage(string messageValue)
+        {
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference(_queueName);
+            CloudQueueMessage message = new CloudQueueMessage(messageValue);            
+            await queue.AddMessageAsync(message);
         }
     }
 }
